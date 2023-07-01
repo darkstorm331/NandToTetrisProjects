@@ -11,48 +11,45 @@
 
 // Put your code here.
 
-//Take first number
+// First set the answer equal to the first number
 @R0
-D=M
-@num1
-M=D
-
-//Take second number
-@R1
-D=M
-@num2
-M=D
-
-//iterations
-@i
-M=0
-
-//Store result
+D = M
 @R2
-M=0
+M = D
 
-//Start Loop
-(LOOP)
-    @i
-    D=M
-    @num2
-    D=D-M
-    @END
-    D;JEQ
+// Take the second number and store it in the 3rd register. This is to track loops required
+@R1
+D = M
+@R3
+M = D
 
-    @R2
-    D=M
-    @num1
-    D=D+M
-    @R2
-    M=D
+(LOOPSTART)
+// Get number from 3rd register and decrement by 1
+@R3
+M = M-1
+D = M
 
-    @i
-    M=M+1
+// If less than 0 then it means we're multiplying by zero and need to set result to 0
+@ZERORESULT
+D ; JLT
 
-    @LOOP
-    0;JMP
+// If the number is 0 then we were multiplying by 1 so we can end here
+@END
+D ; JEQ
+
+// Get register 0 value and add to result, then loop again
+@R0
+D = M
+@R2
+M = M+D
+@LOOPSTART
+0 ; JMP
+
+// Multiplied by 0
+(ZERORESULT)
+@R2
+M = 0
 
 (END)
-    @END
-    0;JMP
+@END
+0 ; JMP

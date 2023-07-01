@@ -13,71 +13,62 @@
 
 // Put your code here.
 
+(STARTLOOP)
+// Store Memory Address of last screen Address in Register 15
+@KBD
+D = A
+@R15
+M = D
 
+// Check for keyboard press and if nothing then jump to white
+@KBD
+D = M
+@WHITE
+D ; JEQ
 
-(LOOP)
-    //Set 8000 loops for screen space
-    @8192
-    D=A
-    @loops
-    M=D
+// Set register 14 as -1 which will be black on screen
+(BLACK)
+@R14
+M = -1
+@DRAWSCREEN
+0 ; JMP
 
-    @colour
-    M=0
+// Set register 14 as 0 which will be white on screen
+(WHITE)
+@R14
+M = 0
+@DRAWSCREEN
+0 ; JMP
 
-    @i
-    M=0
+// Start the draw screen loop
+(DRAWSCREEN)
 
-    @currentpixel
-    M=0
+// Decrement the screen address by 1
+@R15
+AM = M-1
 
-    @KBD
-    D=M
+// Get the colour value from register 14
+@R14
+D = M
 
-    //Set colour to black or white
-    @BLACK
-    D;JNE
-    @WHITE
-    D;JEQ
+// Set the address back to the screen address and then set the colour
+@R15
+A = M
+M = D
 
-    (BLACK)
-        @colour
-        M=-1
-        @PAINTSCRN
-        0;JMP
+// Set the D register to the first screen address
+@SCREEN
+D = A
 
-    (WHITE)
-        @colour
-        M=0
-        @PAINTSCRN
-        0;JMP
+// Set A register back again
+@R15
+A = M
 
-    (PAINTSCRN)
-        @i
-        D=M
-        @loops
-        D=D-M
-        @LOOP
-        D;JEQ
+// Compare the current screen register against the first register to see if the screen is fully painted
+D = D-A
+@DRAWSCREEN
+D ; JLT
 
-        @i
-        D=M
-        @SCREEN    
-        A=A+D
-        D=A
-        @currentpixel
-        M=D
-
-        @colour
-        D=M
-        @currentpixel
-        A=M
-
-        M=D
-
-        @i
-        M=M+1
-    @PAINTSCRN
-    0;JMP
-@LOOP
-0;JMP
+// Endless Loop
+@STARTLOOP
+0 ; JMP
