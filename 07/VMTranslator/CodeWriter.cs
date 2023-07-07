@@ -222,7 +222,7 @@ namespace VMTranslator
             OutFileWriter.WriteLine($"@{number}");
             OutFileWriter.WriteLine("D=D+A");
             OutFileWriter.WriteLine("@R13");
-            OutFileWriter.WriteLine("A=D");
+            OutFileWriter.WriteLine("M=D");
             OutFileWriter.WriteLine("@SP");
             OutFileWriter.WriteLine("M=M-1");
             OutFileWriter.WriteLine("A=M");
@@ -274,6 +274,8 @@ namespace VMTranslator
             OutFileWriter.WriteLine("@SP");
             OutFileWriter.WriteLine("A=M");
             OutFileWriter.WriteLine("M=D");
+            OutFileWriter.WriteLine("@SP");
+            OutFileWriter.WriteLine("M=M+1");
         }
 
         private void Sub() {
@@ -293,6 +295,8 @@ namespace VMTranslator
             OutFileWriter.WriteLine("@SP");
             OutFileWriter.WriteLine("A=M");
             OutFileWriter.WriteLine("M=D");
+            OutFileWriter.WriteLine("@SP");
+            OutFileWriter.WriteLine("M=M+1");
         }
 
         private void Neg() {
