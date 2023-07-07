@@ -31,21 +31,27 @@ namespace VMTranslator
                     break;
 
                 case "eq":
+                    Eq();
                     break;
 
                 case "gt":
+                    Gt();
                     break;
 
                 case "lt":
+                    Lt();
                     break;
 
                 case "and":
+                    And();
                     break;
 
                 case "or":
+                    Or();
                     break;
 
                 case "not":
+                    Not();
                     break;
             }
         }
@@ -306,6 +312,36 @@ namespace VMTranslator
             OutFileWriter.WriteLine("A=M");
             OutFileWriter.WriteLine("D=-M");
             OutFileWriter.WriteLine("M=D");
+        }
+
+        private void Eq() {
+            OutFileWriter.WriteLine($"// eq");
+
+        }
+
+        private void Gt() {
+            OutFileWriter.WriteLine($"// gt");
+
+        }
+
+        private void Lt() {
+            OutFileWriter.WriteLine($"// lt");
+
+        }
+
+        private void And() {
+            OutFileWriter.WriteLine($"// and");
+
+        }
+
+        private void Or() {
+            OutFileWriter.WriteLine($"// or");
+
+        }
+
+        private void Not() {
+            OutFileWriter.WriteLine($"// not");
+
         }
     }
 }
