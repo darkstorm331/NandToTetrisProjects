@@ -19,39 +19,39 @@ namespace VMTranslator
         public void WriteArithmetic(string command) {
             switch(command.ToLower()) {
                 case "add":
-                    Add();
+                    AddSubAndOr(command.ToLower(), "+");
                     break;
 
                 case "sub":
-                    Sub();
+                    AddSubAndOr(command.ToLower(), "-");
                     break;
 
                 case "neg":
-                    Neg();
+                    NegNot(command.ToLower(), "-");
                     break;
 
                 case "eq":
-                    Eq();
+                    EqGtLt(command.ToLower(), "=");
                     break;
 
                 case "gt":
-                    Gt();
+                    EqGtLt(command.ToLower(), ">");
                     break;
 
                 case "lt":
-                    Lt();
+                    EqGtLt(command.ToLower(), "<");
                     break;
 
                 case "and":
-                    And();
+                    AddSubAndOr(command.ToLower(), "&");
                     break;
 
                 case "or":
-                    Or();
+                    AddSubAndOr(command.ToLower(), "|");
                     break;
 
                 case "not":
-                    Not();
+                    NegNot(command.ToLower(), "!");
                     break;
             }
         }
@@ -263,8 +263,8 @@ namespace VMTranslator
             OutFileWriter.WriteLine("M=D");                       
         }
 
-        private void Add() {
-            OutFileWriter.WriteLine($"// add");
+        private void AddSubAndOr(string command, string op) {
+            OutFileWriter.WriteLine($"// {command}");
             OutFileWriter.WriteLine("@SP");
             OutFileWriter.WriteLine("M=M-1");
             OutFileWriter.WriteLine("A=M");
@@ -276,7 +276,7 @@ namespace VMTranslator
             OutFileWriter.WriteLine("A=M");
             OutFileWriter.WriteLine("D=M");
             OutFileWriter.WriteLine("@R13");
-            OutFileWriter.WriteLine("D=D+M");
+            OutFileWriter.WriteLine($"D=D{op}M");
             OutFileWriter.WriteLine("@SP");
             OutFileWriter.WriteLine("A=M");
             OutFileWriter.WriteLine("M=D");
@@ -284,64 +284,19 @@ namespace VMTranslator
             OutFileWriter.WriteLine("M=M+1");
         }
 
-        private void Sub() {
-            OutFileWriter.WriteLine($"// sub");
+        private void NegNot(string command, string op) {
+            OutFileWriter.WriteLine($"// {command}");
             OutFileWriter.WriteLine("@SP");
             OutFileWriter.WriteLine("M=M-1");
             OutFileWriter.WriteLine("A=M");
-            OutFileWriter.WriteLine("D=M");
-            OutFileWriter.WriteLine("@R13");
+            OutFileWriter.WriteLine($"D={op}M");
             OutFileWriter.WriteLine("M=D");
-            OutFileWriter.WriteLine("@SP");
-            OutFileWriter.WriteLine("M=M-1");
-            OutFileWriter.WriteLine("A=M");
-            OutFileWriter.WriteLine("D=M");
-            OutFileWriter.WriteLine("@R13");
-            OutFileWriter.WriteLine("D=D-M");
-            OutFileWriter.WriteLine("@SP");
-            OutFileWriter.WriteLine("A=M");
-            OutFileWriter.WriteLine("M=D");
-            OutFileWriter.WriteLine("@SP");
-            OutFileWriter.WriteLine("M=M+1");
-        }
-
-        private void Neg() {
-            OutFileWriter.WriteLine($"// neg");
-            OutFileWriter.WriteLine("@SP");
-            OutFileWriter.WriteLine("M=M-1");
-            OutFileWriter.WriteLine("A=M");
-            OutFileWriter.WriteLine("D=-M");
-            OutFileWriter.WriteLine("M=D");
-        }
-
-        private void Eq() {
-            OutFileWriter.WriteLine($"// eq");
 
         }
 
-        private void Gt() {
-            OutFileWriter.WriteLine($"// gt");
-
-        }
-
-        private void Lt() {
-            OutFileWriter.WriteLine($"// lt");
-
-        }
-
-        private void And() {
-            OutFileWriter.WriteLine($"// and");
-
-        }
-
-        private void Or() {
-            OutFileWriter.WriteLine($"// or");
-
-        }
-
-        private void Not() {
-            OutFileWriter.WriteLine($"// not");
-
+        private void EqGtLt(string command, string op) {
+            OutFileWriter.WriteLine($"// {command}");
+            
         }
     }
 }
