@@ -10,10 +10,14 @@ namespace VMTranslator
         public string FileName { get; set; }
         public StreamWriter OutFileWriter { get; set; }
 
+        private int LabelCounter { get; set; }
+
         public CodeWriter(string outFile) {
             OutFileWriter = new StreamWriter(File.Create(outFile));
 
             FileName = Path.GetFileNameWithoutExtension(outFile);
+
+            LabelCounter = 0;
         }
 
         public void WriteArithmetic(string command) {
@@ -31,15 +35,15 @@ namespace VMTranslator
                     break;
 
                 case "eq":
-                    EqGtLt(command.ToLower(), "=");
+                    EqGtLt(command.ToLower(), "JEQ");
                     break;
 
                 case "gt":
-                    EqGtLt(command.ToLower(), ">");
+                    EqGtLt(command.ToLower(), "JGT");
                     break;
 
                 case "lt":
-                    EqGtLt(command.ToLower(), "<");
+                    EqGtLt(command.ToLower(), "JLT");
                     break;
 
                 case "and":
@@ -291,12 +295,48 @@ namespace VMTranslator
             OutFileWriter.WriteLine("A=M");
             OutFileWriter.WriteLine($"D={op}M");
             OutFileWriter.WriteLine("M=D");
-
+            OutFileWriter.WriteLine("@SP");
+            OutFileWriter.WriteLine("M=M+1");
         }
 
         private void EqGtLt(string command, string op) {
-            OutFileWriter.WriteLine($"// {command}");
+            string trueLabel = $"_TRUE_{LabelCounter}";
+            string falseLabel = $"_FALSE_{LabelCounter}";
+            string endLabel = $"_END_{LabelCounter}";
             
+            OutFileWriter.WriteLine($"// {command}");
+            OutFileWriter.WriteLine("@SP");
+            OutFileWriter.WriteLine("M=M-1");
+            OutFileWriter.WriteLine("A=M");
+            OutFileWriter.WriteLine("D=M");
+            OutFileWriter.WriteLine("@R13");
+            OutFileWriter.WriteLine("M=D");
+            OutFileWriter.WriteLine("@SP");
+            OutFileWriter.WriteLine("M=M-1");
+            OutFileWriter.WriteLine("A=M");
+            OutFileWriter.WriteLine("D=M");
+            OutFileWriter.WriteLine("@R13");
+            OutFileWriter.WriteLine($"D=D-M");
+            OutFileWriter.WriteLine($"@{trueLabel}");
+            OutFileWriter.WriteLine($"D ; {op}");
+            OutFileWriter.WriteLine($"@{falseLabel}");
+            OutFileWriter.WriteLine($"0 ; JMP");
+            OutFileWriter.WriteLine($"({trueLabel})");
+            OutFileWriter.WriteLine("D=-1");
+            OutFileWriter.WriteLine($"@{endLabel}");
+            OutFileWriter.WriteLine("0 ; JMP");
+            OutFileWriter.WriteLine($"({falseLabel})");
+            OutFileWriter.WriteLine("D=0");
+            OutFileWriter.WriteLine($"@{endLabel}");
+            OutFileWriter.WriteLine("0 ; JMP");
+            OutFileWriter.WriteLine($"({endLabel})");
+            OutFileWriter.WriteLine("@SP");
+            OutFileWriter.WriteLine("A=M");
+            OutFileWriter.WriteLine("M=D");
+            OutFileWriter.WriteLine("@SP");
+            OutFileWriter.WriteLine("M=M+1");
+
+            LabelCounter = LabelCounter + 1;
         }
     }
 }
