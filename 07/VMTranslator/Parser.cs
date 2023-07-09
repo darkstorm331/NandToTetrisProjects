@@ -65,6 +65,12 @@ namespace VMTranslator
                     codeWriter.WriteArithmetic(segments[0]);
                     break;
 
+                case "label":
+                case "goto":
+                case "if-goto":
+                    codeWriter.WriteBranching(segments[0], segments[1]);
+                    break;
+
                 default:
                     break;
             }

@@ -111,6 +111,22 @@ namespace VMTranslator
             }                 
         }
 
+        public void WriteBranching(string command, string label) {
+            switch(command.ToLower()) {
+                case "label":
+                    Label(label);
+                    break;
+
+                case "goto":
+                    GoTo(label);
+                    break;
+
+                case "if-goto":
+                    IfGoTo(label);
+                    break;
+            }
+        }
+
         public void Close() {
             OutFileWriter.Close();
             OutFileWriter.Dispose();
@@ -338,6 +354,24 @@ namespace VMTranslator
             OutFileWriter.WriteLine("M=M+1");
 
             LabelCounter = LabelCounter + 1;
+        }
+
+        private void Label(string labelName) {
+            OutFileWriter.WriteLine($"({labelName})");
+        }
+
+        private void GoTo(string labelName) {
+            OutFileWriter.WriteLine($"@{labelName}");
+            OutFileWriter.WriteLine($"0 ; JMP");
+        }
+
+        private void IfGoTo(string labelName) {
+            OutFileWriter.WriteLine("@SP");
+            OutFileWriter.WriteLine("M=M-1");
+            OutFileWriter.WriteLine("A=M");
+            OutFileWriter.WriteLine("D=M");
+            OutFileWriter.WriteLine($"@{labelName}");
+            OutFileWriter.WriteLine($"D ; JNE");
         }
     }
 }
