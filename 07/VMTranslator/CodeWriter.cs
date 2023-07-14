@@ -127,6 +127,22 @@ namespace VMTranslator
             }
         }
 
+        public void WriteFunctions(string command, string name, int args) {
+            switch(command.ToLower()) {
+                case "call":
+                    Call(name, args);
+                    break;
+
+                case "function":
+                    Function(name, args);
+                    break;
+            }
+        }
+
+        public void WriteReturn() {
+            Return();
+        }
+
         public void Close() {
             OutFileWriter.Close();
             OutFileWriter.Dispose();
@@ -372,6 +388,18 @@ namespace VMTranslator
             OutFileWriter.WriteLine("D=M");
             OutFileWriter.WriteLine($"@{labelName}");
             OutFileWriter.WriteLine($"D ; JNE");
+        }
+
+        private void Call(string functionName, int args) {
+
+        }
+
+        private void Function(string functionName, int args) {
+
+        }
+
+        private void Return() {
+
         }
     }
 }

@@ -71,6 +71,16 @@ namespace VMTranslator
                     codeWriter.WriteBranching(segments[0], segments[1]);
                     break;
 
+                case "call":
+                case "function":
+                    codeWriter.WriteFunctions(segments[0], segments[1], int.Parse(segments[2]));
+                    break;
+
+                case "return":
+                    codeWriter.WriteReturn();
+                    break;
+
+
                 default:
                     break;
             }
